@@ -15,3 +15,12 @@ cd fastapiApp
 virtualenv sagor --python=python3.10
 pip install -r requirements.txt
 ```
+
+#### Simple example of fast API
+```python
+
+@app.get("/hello/{name}")
+async def say_hello(name: str):
+    return {"message": f"Hello {name}"}
+
+```
