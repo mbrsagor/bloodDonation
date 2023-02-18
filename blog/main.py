@@ -1,14 +1,14 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+from . import schemas, models
+from .database import engine
+
+from sqlalchemy.orm import Session
 
 app = FastAPI()
 
-
-class Blog(BaseModel):
-    title: str
-    desc: str
+models.Base.metadata.create_all(engine)
 
 
 @app.post("/blog")
-async def create(data: Blog):
-    return data
+async def create(data: schemas.Blog, db: Session):
+    return db

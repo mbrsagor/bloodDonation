@@ -19,8 +19,7 @@ pip install -r requirements.txt
 #### Simple example of fast API
 ```python
 
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
-
+@app.get('/details/{pk}')
+async def details_api(pk: str):
+    return {"data": {"Hello": pk}}
 ```
