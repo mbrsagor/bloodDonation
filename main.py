@@ -1,7 +1,7 @@
 import models
+from typing import List
 from pydantic import BaseModel
 from fastapi import FastAPI, status, HTTPException
-from typing import Optional, List
 
 from database import SessionLocal
 
@@ -59,20 +59,35 @@ def create_item(item: Item):
 @app.put('/api/update-item/{item_id}', response_model=Item, status_code=status.HTTP_200_OK)
 def update_item(item_id: int, item: Item):
     get_item = db.query(models.Item).filter(models.Item.id == item_id).first()
-    get_item.name = item.name
-    get_item.price = item.price
-    get_item.is_available = item.is_available
-    get_item.description = item.description
-    db.commit()
-    return get_item
+    if get_item is not None:
+        get_item.name = item.name
+        get_item.price = item.price
+        get_item.is_available = item.is_available
+        get_item.description = item.description
+        db.commit()
+        return get_item
+    else:
+        resp = {
+            "status": False,
+            "message": "The item ID is not found."
+        }
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=resp)
 
 
 @app.delete('/api/delete-item/{item_id}')
 def delete_item(item_id: int):
     item = db.query(models.Item).filter(models.Item.id == item_id).first()
     if item is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Item not found.')
+        resp = {
+            "status": False,
+            "message": "The item is already deleted"
+        }
+        return resp
 
     db.delete(item)
     db.commit()
-    return item
+    resp = {
+        "status": True,
+        "message": "The item has been deleted successfully."
+    }
+    return resp
