@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from fastapi import FastAPI, status, HTTPException
 
 from database import SessionLocal
+from utils import response
 
 
 class Item(BaseModel):  # Serializer
@@ -53,7 +54,11 @@ def create_item(item: Item):
 
     db.add(new_item)
     db.commit()
-    return new_item
+    resp = {
+        "status": True,
+        "message": "The item has been created successfully."
+    }
+    return resp
 
 
 @app.put('/api/update-item/{item_id}', response_model=Item, status_code=status.HTTP_200_OK)
