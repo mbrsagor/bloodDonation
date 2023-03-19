@@ -43,6 +43,14 @@ GRANT ALL PRIVILEGES ON DATABASE product TO dev;
 
 #### Setup: 3
 
+Migrate database:
+
+```bash
+python create_db.py
+```
+
+#### Setup: 4
+
 Run the product if everything is alright:
 
 ```bash

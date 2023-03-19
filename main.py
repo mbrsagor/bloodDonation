@@ -69,4 +69,10 @@ def update_item(item_id: int, item: Item):
 
 @app.delete('/api/delete-item/{item_id}')
 def delete_item(item_id: int):
-    pass
+    item = db.query(models.Item).filter(models.Item.id == item_id).first()
+    if item is None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Item not found.')
+
+    db.delete(item)
+    db.commit()
+    return item
