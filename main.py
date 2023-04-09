@@ -4,10 +4,12 @@ from pydantic import BaseModel
 from fastapi import FastAPI, status, HTTPException
 
 from database import SessionLocal
-from utils import response
 
 
-class Item(BaseModel):  # Serializer
+class Item(BaseModel):
+    """
+    This is item serializer
+    """
     id: int
     name: str
     description: str
@@ -25,18 +27,36 @@ app = FastAPI()
 
 @app.get('/api/items', response_model=List[Item], status_code=status.HTTP_200_OK)
 def get_items():
+    """
+    Get list of items API
+    URL: /api/items/
+    Method: GET
+    :return:
+    """
     items = db.query(models.Item).all()
     return items
 
 
 @app.get('/api/item/{item_id}/', response_model=Item, status_code=status.HTTP_200_OK)
 def item_details(item_id: int):
+    """
+    Get Item details API
+    URL: /api/item/<id>/
+    Method: GET
+    :return:
+    """
     item = db.query(models.Item).filter(models.Item.id == item_id).first()
     return item
 
 
 @app.post('/api/create-item', response_model=Item, status_code=status.HTTP_201_CREATED)
 def create_item(item: Item):
+    """
+    Item create API
+    URL: /api/items/
+    Method: POST
+    :return:
+    """
     old_item = db.query(models.Item).filter(models.Item.name == item.name).first()
     if old_item is not None:
         resp = {
@@ -63,6 +83,12 @@ def create_item(item: Item):
 
 @app.put('/api/update-item/{item_id}', response_model=Item, status_code=status.HTTP_200_OK)
 def update_item(item_id: int, item: Item):
+    """
+    Item update API
+    URL: /api/update-item/<pk>/
+    Method: PUT
+    :return:
+    """
     get_item = db.query(models.Item).filter(models.Item.id == item_id).first()
     if get_item is not None:
         get_item.name = item.name
@@ -81,6 +107,12 @@ def update_item(item_id: int, item: Item):
 
 @app.delete('/api/delete-item/{item_id}')
 def delete_item(item_id: int):
+    """
+    Item create API
+    URL: /api/delete-item/<i>/
+    Method: DELETE
+    :return:
+    """
     item = db.query(models.Item).filter(models.Item.id == item_id).first()
     if item is None:
         resp = {
