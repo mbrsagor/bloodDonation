@@ -1,0 +1,5 @@
+ITEM_CREATED = "The item has been created successfully."
+ITEM_EXISTS = "The item is already exists."
+NO_ITEM = "The item ID is not found."
+ITEM_DELETE = "The item has been deleted successfully."
+ITEM_ALREADY_DELETE = "The item is already deleted."

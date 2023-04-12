@@ -3,6 +3,7 @@ from typing import List
 from pydantic import BaseModel
 from fastapi import FastAPI, status, HTTPException
 
+from utils import messages
 from database import SessionLocal
 
 
@@ -61,7 +62,7 @@ def create_item(item: Item):
     if old_item is not None:
         resp = {
             "status": False,
-            "message": "The item is already exists"
+            "message": messages.ITEM_EXISTS
         }
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=resp)
 
@@ -76,7 +77,7 @@ def create_item(item: Item):
     db.commit()
     resp = {
         "status": True,
-        "message": "The item has been created successfully."
+        "message": messages.ITEM_CREATED
     }
     return resp
 
@@ -100,7 +101,7 @@ def update_item(item_id: int, item: Item):
     else:
         resp = {
             "status": False,
-            "message": "The item ID is not found."
+            "message": messages.NO_ITEM
         }
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=resp)
 
@@ -117,7 +118,7 @@ def delete_item(item_id: int):
     if item is None:
         resp = {
             "status": False,
-            "message": "The item is already deleted"
+            "message": messages.ITEM_ALREADY_DELETE
         }
         return resp
 
@@ -125,6 +126,6 @@ def delete_item(item_id: int):
     db.commit()
     resp = {
         "status": True,
-        "message": "The item has been deleted successfully."
+        "message": messages.ITEM_DELETE
     }
     return resp
